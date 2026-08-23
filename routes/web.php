@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdmissionsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Applicant\ApplicationDocumentController;
+use App\Http\Controllers\Applicant\ApplicationWizardController;
 use App\Http\Controllers\Applicant\DashboardController as ApplicantDashboard;
+use App\Http\Controllers\Applicant\OfferController;
 use App\Http\Controllers\Auth\ApplicantRegistrationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationController;
@@ -84,6 +88,20 @@ Route::middleware('auth')->group(function (): void {
     */
     Route::prefix('applicant')->middleware(['verified', 'role:applicant'])->group(function (): void {
         Route::get('/', ApplicantDashboard::class)->name('applicant.dashboard');
+
+        Route::get('/application', [ApplicationWizardController::class, 'show'])->name('applicant.application');
+        Route::post('/application/start', [ApplicationWizardController::class, 'start'])->name('applicant.application.start');
+        Route::post('/application/personal', [ApplicationWizardController::class, 'savePersonal'])->name('applicant.application.personal');
+        Route::post('/application/education', [ApplicationWizardController::class, 'saveEducation'])->name('applicant.application.education');
+        Route::post('/application/choices', [ApplicationWizardController::class, 'saveChoices'])->name('applicant.application.choices');
+        Route::post('/application/submit', [ApplicationWizardController::class, 'submit'])->name('applicant.application.submit');
+        Route::post('/application/withdraw', [ApplicationWizardController::class, 'withdraw'])->name('applicant.application.withdraw');
+
+        Route::post('/application/documents', [ApplicationDocumentController::class, 'store'])->name('applicant.documents.store');
+        Route::get('/application/documents/{document}/download', [ApplicationDocumentController::class, 'download'])->name('applicant.documents.download');
+
+        Route::post('/offer/accept', [OfferController::class, 'accept'])->name('applicant.offer.accept');
+        Route::post('/offer/decline', [OfferController::class, 'decline'])->name('applicant.offer.decline');
     });
 
     Route::prefix('student')->middleware(['verified', 'role:student'])->group(function (): void {
@@ -96,5 +114,15 @@ Route::middleware('auth')->group(function (): void {
 
     Route::prefix('admin')->middleware(['verified', 'role:super_admin,registrar,admissions_officer,faculty_admin,finance_officer,support_staff'])->group(function (): void {
         Route::get('/', AdminDashboard::class)->name('admin.dashboard');
+
+        // Admissions queue (policy-scoped to officers/registrar beyond this gate).
+        Route::get('/admissions', [AdmissionsController::class, 'index'])->name('admin.admissions.index');
+        Route::get('/admissions/{application}', [AdmissionsController::class, 'show'])->name('admin.admissions.show');
+        Route::post('/admissions/{application}/start-review', [AdmissionsController::class, 'startReview'])->name('admin.admissions.review');
+        Route::post('/admissions/{application}/decide', [AdmissionsController::class, 'decide'])->name('admin.admissions.decide');
+
+        Route::get('/admission-documents/{document}/download', [AdmissionsController::class, 'document'])->name('admin.admissions.document');
+        Route::post('/admission-documents/{document}/verify', [AdmissionsController::class, 'verifyDocument'])->name('admin.admissions.document.verify');
+        Route::post('/admission-documents/{document}/reject', [AdmissionsController::class, 'rejectDocument'])->name('admin.admissions.document.reject');
     });
 });

@@ -54,7 +54,7 @@
                         <x-ui.alert type="warning" title="The admissions office needs something from you">
                             {{ $application->decision_note }}
                         </x-ui.alert>
-                        <a href="/applicant/application/documents" class="btn-primary mt-4">Upload documents</a>
+                        <a href="{{ route('applicant.application', ['step' => 'documents']) }}" class="btn-primary mt-4">Upload documents</a>
                     @elseif ($status->isDecided())
                         <x-ui.alert type="success" title="{{ $status->label() }}">
                             {{ $application->decision_note ?? 'A decision has been made on your application.' }}
@@ -62,11 +62,11 @@
 
                         @if (in_array($status, [\App\Enums\ApplicationStatus::Accepted, \App\Enums\ApplicationStatus::ConditionallyAccepted]) && $application->offer_responded_at === null)
                             <div class="mt-4 flex flex-wrap gap-2">
-                                <form method="POST" action="/applicant/application/accept-offer">
+                                <form method="POST" action="{{ route('applicant.offer.accept') }}">
                                     @csrf
                                     <button type="submit" class="btn-primary">Accept offer</button>
                                 </form>
-                                <form method="POST" action="/applicant/application/decline-offer">
+                                <form method="POST" action="{{ route('applicant.offer.decline') }}">
                                     @csrf
                                     <button type="submit" class="btn-secondary">Decline offer</button>
                                 </form>
@@ -107,7 +107,7 @@
                             No documents uploaded yet. Most applications need a passport photograph,
                             your O-level result, and an entrance examination slip.
                         </p>
-                        <a href="/applicant/application/documents" class="btn-secondary btn-sm mt-4 w-full">Manage documents</a>
+                        <a href="{{ route('applicant.application', ['step' => 'documents']) }}" class="btn-secondary btn-sm mt-4 w-full">Manage documents</a>
                     @else
                         <ul class="mt-3 space-y-2.5">
                             @foreach ($application->documents as $document)
