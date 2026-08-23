@@ -7,8 +7,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Lecturer\DashboardController as LecturerDashboard;
+use App\Http\Controllers\PublicAcademicsController;
+use App\Http\Controllers\PublicAdmissionsController;
 use App\Http\Controllers\PublicHomeController;
+use App\Http\Controllers\PublicNewsController;
 use App\Http\Controllers\Shared\NotificationsController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
 use Illuminate\Support\Facades\Route;
@@ -17,10 +21,23 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Public website
 |--------------------------------------------------------------------------
-| The editorial site (academics, admissions, campus life, news…) is built
-| phase by phase; routes are added here as each page becomes real.
 */
 Route::get('/', PublicHomeController::class)->name('home');
+
+Route::get('/about', fn () => view('public.about'))->name('about');
+Route::get('/campus-life', fn () => view('public.campus-life'))->name('campus-life');
+Route::get('/research', fn () => view('public.research'))->name('research');
+
+Route::get('/academics', [PublicAcademicsController::class, 'index'])->name('academics');
+Route::get('/academics/{programme:slug}', [PublicAcademicsController::class, 'show'])->name('programmes.show');
+
+Route::get('/admissions', PublicAdmissionsController::class)->name('admissions');
+
+Route::get('/news', [PublicNewsController::class, 'index'])->name('news.index');
+Route::get('/news/{article:slug}', [PublicNewsController::class, 'show'])->name('news.show');
+
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 /*
 |--------------------------------------------------------------------------
