@@ -159,7 +159,7 @@
                     @foreach ($unpaidInvoices as $invoice)
                         <x-ui.alert type="warning" title="{{ $invoice->title }}">
                             {{ $invoice->formattedAmount() }} is due by {{ $invoice->due_at?->format('j M Y') }}.
-                            <a href="/student/payments" class="ms-1 font-semibold underline underline-offset-2">Pay now</a>
+                            <a href="/payments" class="ms-1 font-semibold underline underline-offset-2">Pay now</a>
                         </x-ui.alert>
                     @endforeach
                 </section>

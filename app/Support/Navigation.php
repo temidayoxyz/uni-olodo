@@ -32,7 +32,7 @@ final class Navigation
                 ['label' => 'My Application', 'url' => '/applicant/application', 'icon' => 'file-text'],
             ]],
             ['items' => [
-                ['label' => 'Payments', 'url' => '/applicant/payments', 'icon' => 'receipt'],
+                ['label' => 'Payments', 'url' => '/payments', 'icon' => 'receipt'],
                 ['label' => 'Support', 'url' => '/support', 'icon' => 'life-buoy'],
             ]],
         ];
@@ -51,7 +51,7 @@ final class Navigation
             ]],
             ['items' => [
                 ['label' => 'Resources', 'url' => '/resources', 'icon' => 'library'],
-                ['label' => 'Payments', 'url' => '/student/payments', 'icon' => 'receipt'],
+                ['label' => 'Payments', 'url' => '/payments', 'icon' => 'receipt'],
                 ['label' => 'Support', 'url' => '/support', 'icon' => 'life-buoy'],
             ]],
         ];

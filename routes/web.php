@@ -24,6 +24,7 @@ use App\Http\Controllers\Lms\MaterialController;
 use App\Http\Controllers\Lms\ModuleController;
 use App\Http\Controllers\Lms\MyCoursesController;
 use App\Http\Controllers\Lms\QuizController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\PublicAcademicsController;
 use App\Http\Controllers\PublicAdmissionsController;
 use App\Http\Controllers\PublicHomeController;
@@ -92,6 +93,22 @@ Route::middleware('auth')->group(function (): void {
 
     Route::post('notifications/read-all', [NotificationsController::class, 'markAllRead'])->name('notifications.read-all');
     Route::post('notifications/{id}/read', [NotificationsController::class, 'markRead'])->name('notifications.read');
+
+    /*
+    |----------------------------------------------------------------------
+    | Payments — shared by students and applicants; every invoice is
+    | ownership-checked regardless of portal.
+    |----------------------------------------------------------------------
+    */
+    Route::get('/payments', [PaymentsController::class, 'index'])->name('payments.index');
+    Route::get('/payments/checkout/{reference}', [PaymentsController::class, 'checkout'])
+        ->name('payments.checkout');
+    Route::post('/payments/checkout/{reference}/complete', [PaymentsController::class, 'complete'])
+        ->name('payments.complete');
+
+    // {invoice} routes after the fixed checkout paths so 'checkout' is never captured as an id.
+    Route::get('/payments/{invoice}', [PaymentsController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{invoice}/pay', [PaymentsController::class, 'pay'])->name('payments.pay');
 
     /*
     |----------------------------------------------------------------------
@@ -218,5 +235,9 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/users', [UsersController::class, 'index'])->name('admin.users.index');
         Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('admin.users.edit');
         Route::put('/users/{user}', [UsersController::class, 'update'])->name('admin.users.update');
+
+        // Bursary (finance officer — gated via manage-payments).
+        Route::get('/payments', [App\Http\Controllers\Admin\PaymentsController::class, 'index'])->name('admin.payments.index');
+        Route::post('/payments/transactions/{transaction}/verify', [App\Http\Controllers\Admin\PaymentsController::class, 'verifyManual'])->name('admin.payments.verify');
     });
 });
