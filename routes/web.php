@@ -20,6 +20,7 @@ use App\Http\Controllers\Lms\GradingController;
 use App\Http\Controllers\Lms\MaterialController;
 use App\Http\Controllers\Lms\ModuleController;
 use App\Http\Controllers\Lms\MyCoursesController;
+use App\Http\Controllers\Lms\QuizController;
 use App\Http\Controllers\PublicAcademicsController;
 use App\Http\Controllers\PublicAdmissionsController;
 use App\Http\Controllers\PublicHomeController;
@@ -110,6 +111,13 @@ Route::middleware('auth')->group(function (): void {
         // Lecturer grading queue (policy: grade).
         Route::get('/assignments/{assignment}/grade', [GradingController::class, 'show'])->name('courses.grading');
         Route::post('/submissions/{submission}/grade', [GradingController::class, 'store'])->name('courses.grading.store');
+
+        // Quizzes — timed attempts enforced server-side.
+        Route::get('/quizzes/{quiz}', [QuizController::class, 'show'])->name('courses.quiz.show');
+        Route::post('/quizzes/{quiz}/start', [QuizController::class, 'start'])->name('courses.quiz.start');
+        Route::get('/quizzes/{quiz}/take', [QuizController::class, 'take'])->name('courses.quiz.take');
+        Route::post('/quizzes/{quiz}/attempts/{attempt}', [QuizController::class, 'submitAttempt'])->name('courses.quiz.submit');
+        Route::get('/quizzes/{quiz}/result', [QuizController::class, 'result'])->name('courses.quiz.result');
     });
 
     /*
