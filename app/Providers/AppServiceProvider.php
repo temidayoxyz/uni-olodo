@@ -26,6 +26,12 @@ class AppServiceProvider extends ServiceProvider
         // So does the results approval chain.
         Gate::define('approve-results', fn (User $user) => $user->hasRole(UserRole::Registrar));
 
+        // Academic structure (faculties → programmes → courses, calendar): registry.
+        Gate::define('manage-structure', fn (User $user) => $user->hasRole(UserRole::Registrar));
+
+        // Users & roles: super administrator only (Gate::before already grants them).
+        Gate::define('manage-users', fn () => false);
+
         // Surface N+1 query patterns loudly during development, never in production.
         if (! $this->app->isProduction()) {
             Model::preventLazyLoading();

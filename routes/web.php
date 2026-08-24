@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AcademicsController;
 use App\Http\Controllers\Admin\AdmissionsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\RegistrationsController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Applicant\ApplicationDocumentController;
 use App\Http\Controllers\Applicant\ApplicationWizardController;
 use App\Http\Controllers\Applicant\DashboardController as ApplicantDashboard;
@@ -196,5 +198,25 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/results/{submission}/approve', [App\Http\Controllers\Admin\ResultsController::class, 'approve'])->name('admin.results.approve');
         Route::post('/results/{submission}/return', [App\Http\Controllers\Admin\ResultsController::class, 'returnForCorrections'])->name('admin.results.return');
         Route::post('/results/{submission}/publish', [App\Http\Controllers\Admin\ResultsController::class, 'publish'])->name('admin.results.publish');
+
+        // Academic structure (registry) — gated via manage-structure.
+        Route::get('/academics', [AcademicsController::class, 'index'])->name('admin.academics');
+        Route::get('/academics/programmes/create', [AcademicsController::class, 'createProgramme'])->name('admin.programmes.create');
+        Route::post('/academics/programmes', [AcademicsController::class, 'storeProgramme'])->name('admin.programmes.store');
+        Route::get('/academics/programmes/{programme}/edit', [AcademicsController::class, 'editProgramme'])->name('admin.programmes.edit');
+        Route::put('/academics/programmes/{programme}', [AcademicsController::class, 'updateProgramme'])->name('admin.programmes.update');
+
+        Route::get('/academics/courses', [AcademicsController::class, 'courses'])->name('admin.courses');
+        Route::post('/academics/courses', [AcademicsController::class, 'storeCourse'])->name('admin.courses.store');
+        Route::put('/academics/courses/{course}', [AcademicsController::class, 'updateCourse'])->name('admin.courses.update');
+        Route::post('/academics/courses/{course}/toggle', [AcademicsController::class, 'toggleCourse'])->name('admin.courses.toggle');
+
+        Route::get('/academics/calendar', [AcademicsController::class, 'calendar'])->name('admin.calendar');
+        Route::put('/academics/calendar/semesters/{semester}', [AcademicsController::class, 'updateSemesterWindow'])->name('admin.semesters.window');
+
+        // Users & roles (super admin — gated via manage-users).
+        Route::get('/users', [UsersController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/users/{user}', [UsersController::class, 'update'])->name('admin.users.update');
     });
 });
