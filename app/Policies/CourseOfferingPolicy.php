@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\UserRole;
+use App\Models\Assignment;
 use App\Models\CourseOffering;
 use App\Models\RegistrationItem;
 use App\Models\User;
@@ -40,10 +41,18 @@ class CourseOfferingPolicy
         return $user->role === UserRole::Lecturer && $offering->lecturer_id === $user->id;
     }
 
-    /** Grading authority is strictly scoped to the lecturer's own offering. */
-    public function grade(User $user, CourseOffering $offering): bool
+    /** Grading authority is strictly scoped to the lecturer's own offering. The registrar may inspect. */
+    public function grade(User $user, CourseOffering $offering, ?Assignment $assignment = null): bool
     {
-        return $user->role === UserRole::Lecturer && $offering->lecturer_id === $user->id;
+        if ($user->hasRole(UserRole::Registrar)) {
+            return true;
+        }
+
+        if ($user->role !== UserRole::Lecturer || $offering->lecturer_id !== $user->id) {
+            return false;
+        }
+
+        return $assignment === null || $assignment->course_offering_id === $offering->id;
     }
 
     public static function isEnrolled(User $user, CourseOffering $offering): bool

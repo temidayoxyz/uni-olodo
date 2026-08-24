@@ -14,6 +14,12 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Lecturer\DashboardController as LecturerDashboard;
+use App\Http\Controllers\Lms\AssignmentController;
+use App\Http\Controllers\Lms\CourseHomeController;
+use App\Http\Controllers\Lms\GradingController;
+use App\Http\Controllers\Lms\MaterialController;
+use App\Http\Controllers\Lms\ModuleController;
+use App\Http\Controllers\Lms\MyCoursesController;
 use App\Http\Controllers\PublicAcademicsController;
 use App\Http\Controllers\PublicAdmissionsController;
 use App\Http\Controllers\PublicHomeController;
@@ -82,6 +88,29 @@ Route::middleware('auth')->group(function (): void {
 
     Route::post('notifications/read-all', [NotificationsController::class, 'markAllRead'])->name('notifications.read-all');
     Route::post('notifications/{id}/read', [NotificationsController::class, 'markRead'])->name('notifications.read');
+
+    /*
+    |----------------------------------------------------------------------
+    | Shared LMS space — one set of URLs for students and lecturers;
+    | CourseOfferingPolicy decides what each may see and do.
+    |----------------------------------------------------------------------
+    */
+    Route::get('/courses', [MyCoursesController::class, 'index'])->name('courses.index');
+
+    Route::prefix('/courses/{offering}')->group(function (): void {
+        Route::get('/', [CourseHomeController::class, 'index'])->name('courses.home');
+        Route::get('/modules/{module}', [ModuleController::class, 'show'])->name('courses.module');
+        Route::get('/materials/{content}/download', [MaterialController::class, 'download'])->name('courses.material');
+
+        Route::get('/assignments', [AssignmentController::class, 'index'])->name('courses.assignments');
+        Route::get('/assignments/{assignment}', [AssignmentController::class, 'show'])->name('courses.assignment.show');
+        Route::post('/assignments/{assignment}/submit', [AssignmentController::class, 'submit'])->name('courses.assignment.submit');
+        Route::get('/submissions/{submission}/download', [AssignmentController::class, 'downloadSubmission'])->name('courses.submission.download');
+
+        // Lecturer grading queue (policy: grade).
+        Route::get('/assignments/{assignment}/grade', [GradingController::class, 'show'])->name('courses.grading');
+        Route::post('/submissions/{submission}/grade', [GradingController::class, 'store'])->name('courses.grading.store');
+    });
 
     /*
     |----------------------------------------------------------------------

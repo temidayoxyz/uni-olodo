@@ -44,7 +44,7 @@ final class Navigation
             ['items' => [
                 ['label' => 'Dashboard', 'url' => '/student', 'icon' => 'layout-dashboard'],
                 ['label' => 'My Academics', 'url' => '/student/academics', 'icon' => 'graduation-cap'],
-                ['label' => 'Courses', 'url' => '/student/courses', 'icon' => 'book-open'],
+                ['label' => 'Courses', 'url' => '/courses', 'icon' => 'book-open'],
                 ['label' => 'Registration', 'url' => '/student/registration', 'icon' => 'clipboard-check'],
                 ['label' => 'Timetable', 'url' => '/student/timetable', 'icon' => 'calendar-days'],
                 ['label' => 'Results', 'url' => '/student/results', 'icon' => 'award'],
@@ -62,9 +62,9 @@ final class Navigation
         return [
             ['items' => [
                 ['label' => 'Dashboard', 'url' => '/lecturer', 'icon' => 'layout-dashboard'],
-                ['label' => 'My Courses', 'url' => '/lecturer/courses', 'icon' => 'book-open'],
+                ['label' => 'My Courses', 'url' => '/courses', 'icon' => 'book-open'],
                 ['label' => 'Teaching Schedule', 'url' => '/lecturer/schedule', 'icon' => 'calendar-days'],
-                ['label' => 'Grading', 'url' => '/lecturer/grading', 'icon' => 'check-square'],
+                ['label' => 'Grading', 'url' => '/courses?queue=grading', 'icon' => 'check-square'],
             ]],
             ['items' => [
                 ['label' => 'Resources', 'url' => '/resources', 'icon' => 'library'],
