@@ -1,8 +1,30 @@
 # University of Olodo — Digital Campus Platform
 
-A complete university ecosystem built with **Laravel**: public website, admissions & application lifecycle, student portal, lecturer workspace, integrated LMS, academic operations (registration → results), resource hub, administration, and payments architecture.
+A complete university ecosystem built with **Laravel**: public website, admissions & application lifecycle (wizard → officer review → offer acceptance), student portal with rule-engine course registration and timetable, integrated LMS (modules/materials/assignments/quizzes), the full results lifecycle (scores → registry approval → immutable publication), verified payments, resource hub, and role-scoped administration with audit trails.
 
 > University of Olodo is a fictional institution. All seeded people, programmes and records are sample data that demonstrate real product relationships — not factual claims.
+
+## What's implemented
+
+| Area | Highlights |
+| --- | --- |
+| Public site | Editorial homepage, academics directory, programme detail pages, admissions overview, news & events, contact with persisted enquiries |
+| Admissions | Five-step application wizard with save-progress, document uploads (private storage), state machine enforced in `ApplicationService`, officer queue with document verification and audited decisions, offer acceptance → student activation (matric number + first invoice) |
+| Registration | Rule engine: window, level eligibility, prerequisites from **published results only**, 24-credit cap, timetable clash detection; basket UI explains violations inline; registrar approval |
+| LMS | Shared `/courses` space; modules/lessons/materials; assignments with replace-before-deadline; per-lecturer grading queues with required feedback; timed quizzes auto-scored server-side (duration + grace, no invented scores) |
+| Results | Component scores → submission (complete gradebook required) → approve / return → publish immutable official snapshots; student results page with honest GPA math; print-ready unofficial transcript |
+| Payments | Provider abstraction (`PaymentProvider`) with DevGateway simulation; settlement only after server-side verification, atomic and idempotent; bursary manual-transfer verification |
+| Administration | Academic structure CRUD, calendar windows, users & roles (self-lockout protected), audit log views across all privileged actions |
+
+## Demo walkthroughs
+
+Sign in as each persona and try:
+
+- **Zainab** (`z.adeyemi@student.olodo.edu.ng`) — dashboard "today", registration basket with live rule checks, CSC 301 materials/assignments/quiz window, official results & CGPA ≈ 3.62, unpaid tuition invoice → pay via simulated gateway
+- **Dr. Obi** (`c.obi@olodo.edu.ng`) — grading queue for CSC 301, gradebook → submit provisional results
+- **Registrar** (`registrar@olodo.edu.ng`) — approve registrations, approve/publish Dr. Obi's results, move a registration window, browse structure
+- **Admissions officer** (`admissions@olodo.edu.ng`) — review Emeka's application, verify documents, decide
+- **Super admin** (`admin@olodo.edu.ng`) — users & roles with audit trail
 
 ## Requirements
 

@@ -1,0 +1,1 @@
+@include('errors.minimal', ['code' => '403', "title" => 'That area is not yours', "message" => 'Your account does not have permission to view this page. If you believe this is a mistake, contact the registry through support.'])

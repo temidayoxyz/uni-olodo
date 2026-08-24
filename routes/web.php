@@ -180,6 +180,8 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('/timetable', [TimetableController::class, 'index'])->name('student.timetable');
 
+        Route::get('/academics', [App\Http\Controllers\Student\AcademicsController::class, 'index'])->name('student.academics');
+
         // Official results (published only) + unofficial transcript
         Route::get('/results', [App\Http\Controllers\Student\ResultsController::class, 'index'])->name('student.results');
         Route::get('/transcript', [App\Http\Controllers\Student\ResultsController::class, 'transcript'])->name('student.transcript');

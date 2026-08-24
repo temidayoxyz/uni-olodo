@@ -1,0 +1,1 @@
+@include('errors.minimal', ['code' => '419', "title" => 'Session expired', "message" => 'Your session timed out for security. Go back, refresh, and try again - your saved work is safe on the server.'])

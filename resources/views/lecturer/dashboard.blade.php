@@ -14,7 +14,7 @@
             <section aria-labelledby="offerings-heading" class="panel">
                 <div class="panel-header">
                     <h2 id="offerings-heading" class="text-sm font-semibold">My courses this semester</h2>
-                    <a href="/lecturer/courses" class="text-xs font-medium text-pine hover:underline">Manage all →</a>
+                    <a href="/courses" class="text-xs font-medium text-pine hover:underline">Manage all →</a>
                 </div>
 
                 @if ($offerings->isEmpty())
@@ -36,13 +36,13 @@
 
                                 <div class="flex items-center gap-2">
                                     @if ($offering->ungraded > 0)
-                                        <a href="/lecturer/courses/{{ $offering->id }}/grading" class="badge-warning badge hover:brightness-95">
+                                        <a href="/courses/{{ $offering->id }}/assignments" class="badge-warning badge hover:brightness-95">
                                             <span class="dot"></span> {{ $offering->ungraded }} to grade
                                         </a>
                                     @else
                                         <span class="badge-neutral">Grading up to date</span>
                                     @endif
-                                    <a href="/lecturer/courses/{{ $offering->id }}" class="btn-secondary btn-sm">Open</a>
+                                    <a href="/courses/{{ $offering->id }}" class="btn-secondary btn-sm">Open</a>
                                 </div>
                             </li>
                         @endforeach
@@ -80,9 +80,9 @@
             <section class="panel px-5 py-5">
                 <h2 class="text-sm font-semibold">Quick actions</h2>
                 <div class="mt-4 grid gap-2">
-                    <a href="/lecturer/courses" class="btn-secondary justify-start"><x-lucide-upload class="size-4" /> Publish a lesson or material</a>
-                    <a href="/lecturer/grading" class="btn-secondary justify-start"><x-lucide-check-square class="size-4" /> Grade submissions</a>
-                    <a href="/lecturer/results" class="btn-secondary justify-start"><x-lucide-award class="size-4" /> Submit provisional results</a>
+                    <a href="/courses" class="btn-secondary justify-start"><x-lucide-upload class="size-4" /> Publish a lesson or material</a>
+                    <a href="/courses?queue=grading" class="btn-secondary justify-start"><x-lucide-check-square class="size-4" /> Grade submissions</a>
+                    <a href="{{ route('lecturer.results') }}" class="btn-secondary justify-start"><x-lucide-award class="size-4" /> Submit provisional results</a>
                 </div>
             </section>
         </div>

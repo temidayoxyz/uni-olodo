@@ -34,7 +34,7 @@
 
             <button @click="navOpen = !navOpen" :aria-expanded="navOpen"
                     class="inline-flex size-9 items-center justify-center rounded-[var(--radius-control)] border border-line bg-surface text-ink lg:hidden"
-                    aria-controls="mobile-nav" aria-label="{{ $navOpen ?? '' }}Menu">
+                    aria-controls="mobile-nav" :aria-label="navOpen ? 'Close menu' : 'Open menu'">
                 <x-lucide-menu class="size-5" x-show="!navOpen" />
                 <x-lucide-x class="size-5" x-cloak x-show="navOpen" />
             </button>

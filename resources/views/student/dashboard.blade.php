@@ -58,7 +58,7 @@
                                             {{ $slot->schedule->venue ?? 'Venue TBA' }} · {{ $slot->offering->lecturer?->name ?? 'Lecturer TBA' }}
                                         </p>
                                     </div>
-                                    <a href="/student/courses/{{ $slot->offering->id }}" class="btn-secondary btn-sm shrink-0 self-center">Open</a>
+                                    <a href="/courses/{{ $slot->offering->id }}" class="btn-secondary btn-sm shrink-0 self-center">Open</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -105,12 +105,12 @@
                 <div class="panel">
                     <div class="panel-header">
                         <h2 id="courses-heading" class="text-sm font-semibold">My courses this semester</h2>
-                        <a href="/student/courses" class="text-xs font-medium text-pine hover:underline">All courses →</a>
+                        <a href="/courses" class="text-xs font-medium text-pine hover:underline">All courses →</a>
                     </div>
                     <ul class="divide-y divide-line-soft">
                         @foreach ($offerings as $offering)
                             <li>
-                                <a href="/student/courses/{{ $offering->id }}" class="flex items-center gap-4 px-5 py-3.5 hover:bg-surface-dim">
+                                <a href="/courses/{{ $offering->id }}" class="flex items-center gap-4 px-5 py-3.5 hover:bg-surface-dim">
                                     <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-pine-tint text-[0.6875rem] font-bold text-pine">
                                         {{ $offering->course->credit_units }}u
                                     </span>
