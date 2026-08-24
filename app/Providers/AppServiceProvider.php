@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
         // Registration approval belongs to the registry.
         Gate::define('approve-registrations', fn (User $user) => $user->hasRole(UserRole::Registrar));
 
+        // So does the results approval chain.
+        Gate::define('approve-results', fn (User $user) => $user->hasRole(UserRole::Registrar));
+
         // Surface N+1 query patterns loudly during development, never in production.
         if (! $this->app->isProduction()) {
             Model::preventLazyLoading();

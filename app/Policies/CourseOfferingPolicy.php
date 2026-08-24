@@ -57,11 +57,16 @@ class CourseOfferingPolicy
 
     public static function isEnrolled(User $user, CourseOffering $offering): bool
     {
+        return self::isEnrolledById($user->id, $offering);
+    }
+
+    public static function isEnrolledById(int $userId, CourseOffering $offering): bool
+    {
         return RegistrationItem::query()
             ->where('course_offering_id', $offering->id)
             ->where('status', 'registered')
             ->whereHas('registration', fn ($q) => $q
-                ->where('student_id', $user->id)
+                ->where('student_id', $userId)
                 ->where('status', 'approved'))
             ->exists();
     }

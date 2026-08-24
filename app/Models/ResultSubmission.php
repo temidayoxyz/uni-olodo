@@ -40,4 +40,9 @@ class ResultSubmission extends Model
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
+
+    public function statusIs(ResultSubmissionStatus ...$statuses): bool
+    {
+        return in_array($this->status, $statuses, true);
+    }
 }

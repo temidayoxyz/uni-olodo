@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Lecturer\DashboardController as LecturerDashboard;
+use App\Http\Controllers\Lecturer\ResultsController;
 use App\Http\Controllers\Lms\AssignmentController;
 use App\Http\Controllers\Lms\CourseHomeController;
 use App\Http\Controllers\Lms\GradingController;
@@ -118,6 +119,11 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/quizzes/{quiz}/take', [QuizController::class, 'take'])->name('courses.quiz.take');
         Route::post('/quizzes/{quiz}/attempts/{attempt}', [QuizController::class, 'submitAttempt'])->name('courses.quiz.submit');
         Route::get('/quizzes/{quiz}/result', [QuizController::class, 'result'])->name('courses.quiz.result');
+
+        // Results workflow for the assigned lecturer.
+        Route::get('/gradebook', [ResultsController::class, 'gradebook'])->name('courses.gradebook');
+        Route::post('/gradebook', [ResultsController::class, 'saveScores'])->name('courses.gradebook.save');
+        Route::post('/results/submit', [ResultsController::class, 'submit'])->name('courses.results.submit');
     });
 
     /*
@@ -154,10 +160,16 @@ Route::middleware('auth')->group(function (): void {
         Route::post('/registration/submit', [RegistrationController::class, 'submit'])->name('student.registration.submit');
 
         Route::get('/timetable', [TimetableController::class, 'index'])->name('student.timetable');
+
+        // Official results (published only) + unofficial transcript
+        Route::get('/results', [App\Http\Controllers\Student\ResultsController::class, 'index'])->name('student.results');
+        Route::get('/transcript', [App\Http\Controllers\Student\ResultsController::class, 'transcript'])->name('student.transcript');
     });
 
     Route::prefix('lecturer')->middleware(['verified', 'role:lecturer'])->group(function (): void {
         Route::get('/', LecturerDashboard::class)->name('lecturer.dashboard');
+
+        Route::get('/results', [ResultsController::class, 'index'])->name('lecturer.results');
     });
 
     Route::prefix('admin')->middleware(['verified', 'role:super_admin,registrar,admissions_officer,faculty_admin,finance_officer,support_staff'])->group(function (): void {
@@ -177,5 +189,12 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/registrations', [RegistrationsController::class, 'index'])->name('admin.registrations.index');
         Route::post('/registrations/{registration}/approve', [RegistrationsController::class, 'approve'])->name('admin.registrations.approve');
         Route::post('/registrations/{registration}/reject', [RegistrationsController::class, 'reject'])->name('admin.registrations.reject');
+
+        // Results approval chain (registry only — gated in the controller).
+        Route::get('/results', [App\Http\Controllers\Admin\ResultsController::class, 'index'])->name('admin.results.index');
+        Route::get('/results/{submission}', [App\Http\Controllers\Admin\ResultsController::class, 'show'])->name('admin.results.show');
+        Route::post('/results/{submission}/approve', [App\Http\Controllers\Admin\ResultsController::class, 'approve'])->name('admin.results.approve');
+        Route::post('/results/{submission}/return', [App\Http\Controllers\Admin\ResultsController::class, 'returnForCorrections'])->name('admin.results.return');
+        Route::post('/results/{submission}/publish', [App\Http\Controllers\Admin\ResultsController::class, 'publish'])->name('admin.results.publish');
     });
 });
