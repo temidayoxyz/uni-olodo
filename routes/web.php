@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdmissionsController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\RegistrationsController;
 use App\Http\Controllers\Applicant\ApplicationDocumentController;
 use App\Http\Controllers\Applicant\ApplicationWizardController;
 use App\Http\Controllers\Applicant\DashboardController as ApplicantDashboard;
@@ -19,6 +20,8 @@ use App\Http\Controllers\PublicHomeController;
 use App\Http\Controllers\PublicNewsController;
 use App\Http\Controllers\Shared\NotificationsController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
+use App\Http\Controllers\Student\RegistrationController;
+use App\Http\Controllers\Student\TimetableController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -106,6 +109,14 @@ Route::middleware('auth')->group(function (): void {
 
     Route::prefix('student')->middleware(['verified', 'role:student'])->group(function (): void {
         Route::get('/', StudentDashboard::class)->name('student.dashboard');
+
+        // Course registration
+        Route::get('/registration', [RegistrationController::class, 'index'])->name('student.registration');
+        Route::post('/registration/add', [RegistrationController::class, 'add'])->name('student.registration.add');
+        Route::post('/registration/remove/{item}', [RegistrationController::class, 'remove'])->name('student.registration.remove');
+        Route::post('/registration/submit', [RegistrationController::class, 'submit'])->name('student.registration.submit');
+
+        Route::get('/timetable', [TimetableController::class, 'index'])->name('student.timetable');
     });
 
     Route::prefix('lecturer')->middleware(['verified', 'role:lecturer'])->group(function (): void {
@@ -124,5 +135,10 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/admission-documents/{document}/download', [AdmissionsController::class, 'document'])->name('admin.admissions.document');
         Route::post('/admission-documents/{document}/verify', [AdmissionsController::class, 'verifyDocument'])->name('admin.admissions.document.verify');
         Route::post('/admission-documents/{document}/reject', [AdmissionsController::class, 'rejectDocument'])->name('admin.admissions.document.reject');
+
+        // Course registration approvals (registry only — gated in the controller).
+        Route::get('/registrations', [RegistrationsController::class, 'index'])->name('admin.registrations.index');
+        Route::post('/registrations/{registration}/approve', [RegistrationsController::class, 'approve'])->name('admin.registrations.approve');
+        Route::post('/registrations/{registration}/reject', [RegistrationsController::class, 'reject'])->name('admin.registrations.reject');
     });
 });

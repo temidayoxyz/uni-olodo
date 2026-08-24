@@ -47,4 +47,9 @@ class Registration extends Model
     {
         return $this->items()->where('status', 'registered');
     }
+
+    public function statusIs(RegistrationStatus ...$statuses): bool
+    {
+        return in_array($this->status, $statuses, true);
+    }
 }

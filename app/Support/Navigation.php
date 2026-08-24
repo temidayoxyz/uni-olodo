@@ -82,6 +82,7 @@ final class Navigation
             ['section' => 'Academic operations', 'items' => [
                 ['label' => 'Academic Structure', 'url' => '/admin/academics', 'icon' => 'building-2'],
                 ['label' => 'Admissions', 'url' => '/admin/admissions', 'icon' => 'inbox'],
+                ['label' => 'Registrations', 'url' => '/admin/registrations', 'icon' => 'clipboard-check'],
                 ['label' => 'Results', 'url' => '/admin/results', 'icon' => 'award'],
             ]],
             ['section' => 'University content', 'items' => [
